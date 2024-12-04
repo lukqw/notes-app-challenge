@@ -185,5 +185,5 @@ To make it as easy as possible to get started, please follow the following steps
 4. Run `make start-frontend` in a different terminal, which should output a URL at the end.
 
 By visiting the URL found in step 4, you should be able to view the web application, and create/update/delete/list notes. <br/>
-If you make changes to frontend components, they should automatically surface in your browser.<br/>
-If you make changes to lambda function code, they should automatically be recompiled and reloaded, and on new invocation pick up the changes you've made.
+If you make changes to frontend components in your IDE, they should automatically surface in your browser.<br/>
+If you make changes to lambda function code in your IDE, they should automatically be recompiled and reloaded, and on new invocation pick up the changes you've made.

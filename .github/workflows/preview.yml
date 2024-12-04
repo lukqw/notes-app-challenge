@@ -1,0 +1,39 @@
+name: Create PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  preview:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Preview
+        uses: LocalStack/setup-localstack@v0.2.2
+        env:
+          LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          state-backend: ephemeral
+          state-action: start
+          include-preview: 'true'
+          install-awslocal: 'true'
+          # Multi line commands are folding for some reason, so we enforce new lines
+          # For more predictable usage, use script files
+          preview-cmd: |
+            npm install -g aws-cdk-local aws-cdk;
+            make build;
+            make bootstrap;
+            make deploy;
+            make prepare-frontend-local;
+            make build-frontend;
+            make bootstrap-frontend;
+            make deploy-frontend;
+            distributionId=$(awslocal cloudfront list-distributions | jq -r '.DistributionList.Items[0].Id');
+            echo LS_PREVIEW_URL=$AWS_ENDPOINT_URL/cloudfront/$distributionId/ >> $GITHUB_ENV;
+

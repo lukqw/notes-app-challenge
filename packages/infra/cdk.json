@@ -1,0 +1,3 @@
+{
+  "app": "node dist/aws-sdk-js-notes-app.js"
+}
